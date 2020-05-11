@@ -28,6 +28,13 @@
     </ul>
 
     <ul>
+     <router-link class="lnk" v-show="loginStatus" to="/about">
+        <font-awesome-icon icon="question-circle" />
+      </router-link>
+      <span class="lnk-disable" v-show="!loginStatus">
+        <font-awesome-icon icon="question-circle" />
+      </span>
+
       <router-link class="lnk" v-show="loginStatus" to="/patient">
         <font-awesome-icon icon="user" />
       </router-link>

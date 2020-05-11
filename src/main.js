@@ -7,11 +7,11 @@ import Notifications from 'vue-notification'
 
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlay, faSquare, faCheck, faKey, faSignOutAlt, faCog, faUser, faHome, faChevronUp, faChevronDown} from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faSquare, faCheck, faKey, faSignOutAlt, faCog, faUser, faHome, faChevronUp, faChevronDown, faQuestionCircle, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueNativeSock from 'vue-native-websocket'
 
-library.add(faPlay, faSquare, faCheck, faKey, faSignOutAlt, faCog, faUser, faHome, faChevronUp, faChevronDown)
+library.add(faPlay, faSquare, faCheck, faKey, faSignOutAlt, faCog, faUser, faHome, faChevronUp, faChevronDown, faQuestionCircle, faInfoCircle)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
