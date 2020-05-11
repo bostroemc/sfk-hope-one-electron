@@ -23,8 +23,6 @@ if(localStorage.getItem('params')){
 
 Vue.use(VueNativeSock, "wss://" + ipAddress + "/websocket/socket/websocket", { store: store, reconnection: true, reconnectionAttempts: Infinity, reconnectionDelay: 3000})
 
-console.log("ipaddress" + store.state.parameters.ipAddress);
-
 Vue.use(Notifications)
 
 Vue.config.productionTip = false
