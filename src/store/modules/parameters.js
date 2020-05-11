@@ -7,7 +7,7 @@ const state = {
     threshold: 10000,
 
     velocity: 50,
-    acceleration: 10000,
+    acceleration: 500,
     inspirationValue: 1,
     expirationValue: 2,
     compressionFactor: 100,
