@@ -43,35 +43,43 @@ const mutations = {
         localStorage.setItem('params', JSON.stringify(state));
         console.log(JSON.stringify(state));
     },
-    savePatientData(state){
-        const s = JSON.parse(localStorage.getItem('params'));
-        const { firstName, lastName, age, weight, height, sex } = state;
+    savePatientData(state) {
+        if (localStorage.getItem('params')) {
+            const s = JSON.parse(localStorage.getItem('params'));
+            const { firstName, lastName, age, weight, height, sex } = state;
 
-        Object.assign(s, { firstName, lastName, age, weight, height, sex });
+            Object.assign(s, { firstName, lastName, age, weight, height, sex });
 
-        localStorage.setItem('params', JSON.stringify(s));
-        console.log(state);
+            localStorage.setItem('params', JSON.stringify(s));
+        } else {
+            localStorage.setItem('params', JSON.stringify(state));
+            console.log(JSON.stringify(state));
+        }
     },
-    incrementCounter(state){
+    incrementCounter(state) {
         state.count += 1;
 
-        const s = JSON.parse(localStorage.getItem('params'));
-        const { count } = state;
+        if (localStorage.getItem('params')) {
+            const s = JSON.parse(localStorage.getItem('params'));
+            const { count } = state;
 
-        Object.assign(s, { count });
+            Object.assign(s, { count });
 
-        localStorage.setItem('params', JSON.stringify(s));
+            localStorage.setItem('params', JSON.stringify(s));
+        }
     },
-    resetCounter(state){
+    resetCounter(state) {
         state.count = 0;
 
-        const s = JSON.parse(localStorage.getItem('params'));
-        const { count } = state;
+        if (localStorage.getItem('params')) {
+            const s = JSON.parse(localStorage.getItem('params'));
+            const { count } = state;
 
-        Object.assign(s, { count });
+            Object.assign(s, { count });
 
-        localStorage.setItem('params', JSON.stringify(s));
-    }        
+            localStorage.setItem('params', JSON.stringify(s));
+        }
+    }
    
     
 };

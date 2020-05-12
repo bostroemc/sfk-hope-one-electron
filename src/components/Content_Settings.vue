@@ -98,12 +98,12 @@ export default {
       try {
         await this.updateProgram(); //this.$store.dispatch('login', this.password) //
 
-        this.$notify({ text: "Update program successful.", type: "info" });
+        this.$notify({ text: "Program successfully updated.", type: "info" });
 //        this.setProgramActive();
         this.action_saveStore();
 
       } catch (ex) {
-        this.$notify({ text: "Update program  failed." + ex, type: "fault" });
+        this.$notify({ text: "Program update failed." + ex, type: "fault" });
       }
     },
     setProgramActive: function() {
