@@ -19,6 +19,7 @@ const state = {
   cycleTime: 0,
   step: 0,
   respirationRateActual: 0,
+  stopPending: false,
 
   program: {
     name: "undefined",        //human readable name
@@ -104,7 +105,10 @@ const mutations = {
   },
   SET_RESPIRATION_RATE(state) {
     state.respirationRateActual = 0
-  }
+  },
+  SET_STOP_PENDING(state, value) {
+    state.stopPending = value
+  } 
 };
 
 const actions = {
@@ -224,10 +228,12 @@ const actions = {
     await axios.put('https://' + ipAddress + '/api/programs?keepLastModifiedDate=false', JSON.stringify(program), { headers: headers });
 
     await axios.put('https://' + ipAddress + '/api/programs/' + program.id, JSON.stringify(program), { headers: headers });
-
-
+  },
+  resetRespirationRate({ commit }) {
+    setTimeout(()=> {
+      commit('SET_RESPIRATION_RATE');
+   }, 5000);
   }
-
 };
 
 const getters = {

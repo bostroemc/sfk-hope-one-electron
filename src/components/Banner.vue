@@ -71,16 +71,16 @@ export default {
 
     start: function() {
       console.log("program starting...");
+      this.$store.commit("SET_STOP_PENDING", false);
       this.$socket.send(`{ "command": "startProgram", "params": [false], "handle": ${new Date().getTime()} }`);
     },
 
     stop: function() {
       console.log("program stopping...");
-      this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }`);
+      this.$store.commit("SET_STOP_PENDING", true);
+      this.$notify({ text: "Stop pending.", type: "info" });
 
-      setTimeout(()=> {
-        this.$store.commit('SET_RESPIRATION_RATE');
-      }, 2000);
+      // this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }`);
 
     },
 

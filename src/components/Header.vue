@@ -1,10 +1,15 @@
 <template>
   <div :class="monitor">
     <IPAddress label="IP address" name="ipAddress" :value="ipAddress" />
-    <BMV label="BMV" name="bagType"  :value="bagName" />
-    <RespirationRate label="Respiration rate" name="respirationRate" precision="1" :value="respirationRate" />
-    <Name label="Patient"  :value="patientName" />
-    <Counter label="Count"  :value="count" />
+    <BMV label="BMV" name="bagType" :value="bagName" />
+    <RespirationRate
+      label="Respiration rate"
+      name="respirationRate"
+      precision="1"
+      :value="respirationRate"
+    />
+    <Name label="Patient" :value="patientName" />
+    <Counter label="Count" :value="count" />
     <button class="btn-reset" :disabled="!loginStatus" v-on:click="reset">RESET</button>
   </div>
 </template>
@@ -18,9 +23,9 @@ import Counter from "@/components/subcomponents/status_field_sm.vue";
 
 export default {
   name: "Header",
-   data() {
+  data() {
     return {
-      step : 0
+      step: 0
     };
   },
   components: {
@@ -41,60 +46,76 @@ export default {
       return this.$store.state.parameters.respirationRate;
     },
     bagName() {
-        switch(this.$store.state.parameters.bagType) {
+      switch (this.$store.state.parameters.bagType) {
         case 0:
-            return "Ambu Spur II Adult";
-            
+          return "Ambu Spur II Adult";
+
         case 1:
-            return "Laerdal Bag II Adult";
-            
+          return "Laerdal Bag II Adult";
+
         case 2:
-            return "Vyaire Adult";
-                       
+          return "Vyaire Adult";
+
         default:
-            return "Unknown";
-        }
+          return "Unknown";
+      }
     },
     patientName() {
-      return this.$store.state.parameters.lastName + ", " + this.$store.state.parameters.firstName;
+      return (
+        this.$store.state.parameters.lastName +
+        ", " +
+        this.$store.state.parameters.firstName
+      );
     },
     count() {
-      if (this.$store.state.global.step == 4 ){
-        this.$store.commit('incrementCounter');
+      if (this.$store.state.global.step == 3) {
+        this.$store.commit("incrementCounter");
+      }
+      if (this.$store.state.global.step == 4  && this.$store.state.global.stopPending) {  
+        this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }` );
+        this.$store.dispatch("resetRespirationRate");
       }
       return this.$store.state.parameters.count;
     },
     monitor() {
-      return (this.$store.state.parameters.count < this.$store.state.parameters.threshold) ? "header" : "header-warning";
+      return this.$store.state.parameters.count <
+        this.$store.state.parameters.threshold
+        ? "header"
+        : "header-warning";
     },
     loginStatus() {
       return this.$store.state.global.loginStatus;
     }
   },
-    methods: {
+  methods: {
     reset: function() {
       this.$store.commit("resetCounter");
       this.$notify({ text: "Cycle counter reset to zero.", type: "info" });
-    } 
-   
+    }
   }
-
 };
 </script>
 
 <style scoped>
-.header{
-    display: flex;
-    background: linear-gradient(180deg, rgba(221,221,221,1) 0%, rgba(255,255,255,1) 20%);
-
+.header {
+  display: flex;
+  background: linear-gradient(
+    180deg,
+    rgba(221, 221, 221, 1) 0%,
+    rgba(255, 255, 255, 1) 20%
+  );
 }
 
-.header-warning{
-    display: flex;
-    background: linear-gradient(180deg, rgba(255,140,110,1) 0%, rgba(255,153,153,1) 20%);
+.header-warning {
+  display: flex;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 140, 110, 1) 0%,
+    rgba(255, 153, 153, 1) 20%
+  );
 }
 
-.btn-reset{
+.btn-reset {
   background-color: #7f95a4;
   color: white;
   cursor: pointer;
@@ -111,6 +132,4 @@ export default {
   opacity: 0.5;
   pointer-events: none;
 }
-
-
 </style>

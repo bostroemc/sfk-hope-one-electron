@@ -15,8 +15,8 @@
           v-model="password"
           inputmode="numeric"
           minlength="4"
-          maxlength="6"
-          size="6"
+          maxlength="8"
+          size="8"
           placeholder="PIN"
         />
         <button type="submit" class="btn-login">LOGIN</button>
