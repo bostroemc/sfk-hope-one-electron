@@ -1,5 +1,5 @@
 <template>
-  <div :class="monitor">
+  <div class="header">
     <IPAddress label="IP address" name="ipAddress" :value="ipAddress" />
     <BMV label="BMV" name="bagType" :value="bagName" />
     <RespirationRate
@@ -68,20 +68,7 @@ export default {
       );
     },
     count() {
-      if (this.$store.state.global.step == 3) {
-        this.$store.commit("incrementCounter");
-      }
-      if (this.$store.state.global.step == 4  && this.$store.state.global.stopPending) {  
-        this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }` );
-        this.$store.dispatch("resetRespirationRate");
-      }
       return this.$store.state.parameters.count;
-    },
-    monitor() {
-      return this.$store.state.parameters.count <
-        this.$store.state.parameters.threshold
-        ? "header"
-        : "header-warning";
     },
     loginStatus() {
       return this.$store.state.global.loginStatus;
@@ -103,15 +90,6 @@ export default {
     180deg,
     rgba(221, 221, 221, 1) 0%,
     rgba(255, 255, 255, 1) 20%
-  );
-}
-
-.header-warning {
-  display: flex;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 140, 110, 1) 0%,
-    rgba(255, 153, 153, 1) 20%
   );
 }
 

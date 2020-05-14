@@ -1,5 +1,5 @@
 <template>
-  <div class="banner">
+  <div :class="monitor">
     <div style="display: flex; justify-content: flex-start; align-items: center; color: gray;">
       <img
         src="@/assets/Rexroth-Logo_4C.png"
@@ -27,6 +27,7 @@
         <button id="btn-start" class="btn-start" v-on:click="startSequence" :disabled="ready">
           <font-awesome-icon icon="play" />&nbsp;START
         </button>
+        <div v-show="false">{{count}}</div>
       </div>
     </div>
   </div>
@@ -55,6 +56,22 @@ export default {
     },
     programName(){
       return this.$store.state.global.program.name
+   },
+    count() {
+      if (this.$store.state.global.step == 3) {
+        this.$store.commit("incrementCounter");
+      }
+      if (this.$store.state.global.step == 4  && this.$store.state.global.stopPending) {  
+        this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }` );
+        this.$store.dispatch("resetRespirationRate");
+      }
+      return this.$store.state.parameters.count;
+    },
+    monitor() {
+      return this.$store.state.parameters.count <
+        this.$store.state.parameters.threshold
+        ? "banner"
+        : "banner-warning";
     }
   },
 
@@ -79,9 +96,6 @@ export default {
       console.log("program stopping...");
       this.$store.commit("SET_STOP_PENDING", true);
       this.$notify({ text: "Stop pending.", type: "info" });
-
-      // this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }`);
-
     },
 
     reset: function() {
@@ -103,7 +117,9 @@ export default {
 
       setTimeout(()=> {
         this.setProgramActive();
-      }, 3000);     
+        console.log("ID: " + this.$store.state.global.program.id);
+        console.log("driveID: " + this.$store.state.global.program.driveID);
+}, 3000);     
   }
 
 };
@@ -117,6 +133,14 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 110px;
+}
+
+.banner-warning {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 1) 80%,
+    rgba(255, 0, 0, 1) 100%
+  );
 }
 
 .vertical-line {

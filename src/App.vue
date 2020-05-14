@@ -5,7 +5,7 @@
       <Navigation class="navigation" />
       <router-view />
     </div>
-    <notifications class="toast" />
+    <notifications class="toast" position="top left"/>
   </main>
 </template>
 
@@ -46,19 +46,16 @@ export default {
 
   .toast .notification-title {
     width: 800px;
-    
   }
 
    .toast .info {
     background:#00ccff;
     border-left: 5px solid #4ddbff;
-
   }
 
     .toast .fault {
     background: #df0024;
     border-left: 5px solid #ff3355;
-
   }
  
 
