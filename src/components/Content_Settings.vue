@@ -87,7 +87,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["updateProgram", "action_saveStore"]),
+    ...mapActions(["updateProgram", "action_saveStore","getProgramName"]),
 
     drawer_up: function() {
       this.$emit("drawer_up");
@@ -101,18 +101,10 @@ export default {
         this.$notify({ text: "Program successfully updated.", type: "info" });
 //        this.setProgramActive();
         this.action_saveStore();
-
       } catch (ex) {
         this.$notify({ text: "Program update failed." + ex, type: "fault" });
       }
-    },
-    setProgramActive: function() {
-      if (this.$store.state.global.program.id != "default"){
-        let _id = this.$store.state.global.program.id;
-        this.$socket.send(`{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`);
-      }
     }
-
   }
 };
 </script>

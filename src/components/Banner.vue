@@ -7,6 +7,9 @@
         style="width:150px;height:auto; margin: 0 40px 0 10px"
       />
       <h3>HOPE ONE</h3>
+      <button class="btn-comm" :disabled="!communicationStatus">
+        <font-awesome-icon icon="network-wired" />
+      </button>
     </div>
 
     <div style="display: flex; justify-content: flex-end;">
@@ -34,13 +37,13 @@
 </template>
 
 <script>
-import { mapActions} from "vuex";
+import { mapActions } from "vuex";
 
 import ActiveProgram from "@/components/subcomponents/status_field_text_sm.vue";
 import Status from "@/components/subcomponents/status_field_text_sm.vue";
 
 export default {
-  name: "Banner", 
+  name: "Banner",
 
   components: {
     ActiveProgram,
@@ -49,23 +52,41 @@ export default {
 
   computed: {
     processStatus() {
-      return this.$store.getters.ProcessStatus
+      return this.$store.getters.ProcessStatus;
     },
     ready() {
-      return (this.$store.getters.ProcessStatus != "Ready")
+      return this.$store.getters.ProcessStatus != "Ready";
     },
-    programName(){
-      return this.$store.state.global.program.name
-   },
+    programName() {
+      return this.$store.state.global.program.name;
+    },
     count() {
       if (this.$store.state.global.step == 3) {
         this.$store.commit("incrementCounter");
       }
-      if (this.$store.state.global.step == 4  && this.$store.state.global.stopPending) {  
-        this.$socket.send(`{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }` );
+      if (
+        this.$store.state.global.step == 4 &&
+        this.$store.state.global.stopPending
+      ) {
+        this.$socket.send(
+          `{ "command": "cancel", "params": [], "handle": ${new Date().getTime()} }`
+        );
         this.$store.dispatch("resetRespirationRate");
       }
       return this.$store.state.parameters.count;
+    },
+    communicationStatus() {
+      if (this.$store.state.global.socket.isConnected) {
+        if (
+          this.$store.state.global.program.driveID == "undefined" ||
+          this.$store.state.global.program.driveID !=
+            this.$store.state.global.program.id
+        ) {
+          this.initializeProgramData();
+        }
+      }
+
+      return this.$store.state.global.socket.isConnected;
     },
     monitor() {
       return this.$store.state.parameters.count <
@@ -79,9 +100,9 @@ export default {
     ...mapActions(["getProgramName"]),
 
     startSequence: function() {
-      this.setProgramActive();
+      this.activateProgram();
 
-      setTimeout(()=> {
+      setTimeout(() => {
         this.start();
       }, 250);
     },
@@ -89,7 +110,9 @@ export default {
     start: function() {
       console.log("program starting...");
       this.$store.commit("SET_STOP_PENDING", false);
-      this.$socket.send(`{ "command": "startProgram", "params": [false], "handle": ${new Date().getTime()} }`);
+      this.$socket.send(
+        `{ "command": "startProgram", "params": [false], "handle": ${new Date().getTime()} }`
+      );
     },
 
     stop: function() {
@@ -100,28 +123,41 @@ export default {
 
     reset: function() {
       console.log("reseting...");
-      this.$socket.send(`{ "command": "clearError", "params": [], "handle": ${new Date().getTime()} }`);
+      this.$socket.send(
+        `{ "command": "clearError", "params": [], "handle": ${new Date().getTime()} }`
+      );
     },
 
-    setProgramActive: function() {
-      let _id =  this.$store.state.global.program.id == "default" ? this.$store.state.global.program.driveID : this.$store.state.global.program.id;
-      this.$socket.send(`{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`);
+    activateProgram: function() {
+      console.log("id: " + this.$store.state.global.program.id);
+      console.log("driveID: " + this.$store.state.global.program.driveID);
+
+      let _id = this.$store.state.global.program.id;
+      if (_id != "default" && _id != "undefined") {
+        this.$socket.send(
+          `{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`
+        );
+      } else {
+        _id = this.$store.state.global.program.driveID;
+
+        if (_id != "default" && _id != "undefined") {
+          this.$socket.send(
+            `{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`
+          );
+        }
+      }
+    },
+    
+    initializeProgramData: function() {
+      if (this.$store.state.global.program.driveID == "undefined") {
+        this.getProgramName(); //Get program details from database
+      }
+
+      setTimeout(() => {
+        this.activateProgram(); //Activate program
+      }, 1000);
     }
-
-  },
-
-  created: function() {
-      setTimeout(()=> {
-        this.getProgramName();
-      }, 1500);
-
-      setTimeout(()=> {
-        this.setProgramActive();
-        console.log("ID: " + this.$store.state.global.program.id);
-        console.log("driveID: " + this.$store.state.global.program.driveID);
-}, 3000);     
   }
-
 };
 </script>
 
@@ -200,5 +236,17 @@ export default {
 
 .btn-reset:hover {
   background-color: #97a9b5;
+}
+
+.btn-comm {
+  background: none;
+  color: gray;
+  font-size: 22px;
+  border: none;
+  padding: 0 20px 0 40px;
+}
+
+.btn-comm:disabled {
+  color: #c0cfd6;
 }
 </style>

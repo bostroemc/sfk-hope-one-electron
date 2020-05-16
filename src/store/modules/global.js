@@ -23,7 +23,7 @@ const state = {
 
   program: {
     name: "undefined",        //human readable name
-    id: "undefined",        //encoded name (ref. drive.ProgActiveName)
+    id: "default",        //encoded name (ref. drive.ProgActiveName)
     driveID: "undefined",   //temp value for initialization, only used on getProgramName API call
     active: false,             //program is active (ref. drive.ProgActive)
     data: ""
@@ -176,6 +176,12 @@ const actions = {
     }
 
     const response = await axios.get('https://' + ipAddress + '/api/programs/active', { headers: headers });
+    console.log(response.data);
+
+    if (response.data == null) {
+      return Promise.reject("Program activation required.");
+    }
+
     commit("SET_PROGRAM_DATA", JSON.stringify(response.data));
 
 
