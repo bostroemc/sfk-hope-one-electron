@@ -133,14 +133,14 @@ export default {
       console.log("driveID: " + this.$store.state.global.program.driveID);
 
       let _id = this.$store.state.global.program.id;
-      if (_id != "default" && _id != "undefined") {
+      if (_id != "default" && _id != "undefined" && _id != "") {
         this.$socket.send(
           `{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`
         );
       } else {
         _id = this.$store.state.global.program.driveID;
 
-        if (_id != "default" && _id != "undefined") {
+        if (_id != "default" && _id != "undefined" && _id != "") {
           this.$socket.send(
             `{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`
           );
@@ -155,7 +155,7 @@ export default {
 
       setTimeout(() => {
         this.activateProgram(); //Activate program
-      }, 1000);
+      }, 2000);
     }
   }
 };
