@@ -5,8 +5,6 @@
       <option value="0">{{fields[0]}}</option>
       <option value="1">{{fields[1]}}</option>
       <option value="2">{{fields[2]}}</option>
-      <option value="3">{{fields[3]}}</option>
-      <option value="4">{{fields[4]}}</option>
     </select>
     
   </div>
