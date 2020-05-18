@@ -137,6 +137,8 @@ export default {
         this.$socket.send(
           `{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`
         );
+
+        this.$notify({ text: `Activating program id: ${_id}.`, type: "info" });
       } else {
         _id = this.$store.state.global.program.driveID;
 
@@ -144,6 +146,8 @@ export default {
           this.$socket.send(
             `{ "command": "setProgramActive", "params": ["${_id}"], "handle": ${new Date().getTime()} }`
           );
+
+        this.$notify({ text: `Activating program driveID: ${_id}.`, type: "info" });  
         }
       }
     },
