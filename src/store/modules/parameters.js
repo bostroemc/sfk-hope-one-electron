@@ -17,6 +17,7 @@ const state = {
     startPosition: 40,
     endPosition: 135,
     compensation: 100,
+    maxForce: 50,
 
     firstName: "John",
     lastName: "Doe",

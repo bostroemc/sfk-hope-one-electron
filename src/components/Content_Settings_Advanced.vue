@@ -6,14 +6,15 @@
     </div>
 
     <div>
-      <Velocity label="Velocity [mm/s]" name="velocity" :value="velocity"/>
-      <Acceleration label="Acceleration [mm/s^2]" name="acceleration" :value="acceleration"/>
+      <Velocity label="Velocity [mm/s]" name="velocity"  min="0" :value="velocity"/>
+      <Acceleration label="Acceleration [mm/s^2]" name="acceleration"  min="0" :value="acceleration"/>
       <StartPositionOffset label="Start position, offset [mm]" name="startPositionOffset" :value="startPositionOffset"/>
     </div>
 
     <div>
-      <CycleCompensation label="Cycle compensation [ms]" name="compensation" :value="compensation"/>
-      <CounterThreshold label="Counter threshold [#]" name="threshold" :value="threshold"/>
+      <CycleCompensation label="Cycle compensation [ms]" name="compensation"  min="0" :value="compensation"/>
+      <CounterThreshold label="Counter threshold [#]" name="threshold"  min="0" :value="threshold"/>
+      <MaxForce label="Max. force [N]" name="maxForce" min="10" max="50" :value="maxForce"/>
     </div>
 
     <button class="btn" @click="drawer_down()">
@@ -30,6 +31,7 @@ import Acceleration from "@/components/subcomponents/input_field_number_sm.vue";
 import StartPositionOffset from "@/components/subcomponents/input_field_number_sm.vue";
 import CycleCompensation from "@/components/subcomponents/input_field_number_sm.vue";
 import CounterThreshold from "@/components/subcomponents/input_field_number_sm.vue";
+import MaxForce from "@/components/subcomponents/input_field_number_sm.vue";
 
 export default {
   components: {
@@ -39,7 +41,8 @@ export default {
     Acceleration,
     StartPositionOffset,
     CycleCompensation,
-    CounterThreshold
+    CounterThreshold,
+    MaxForce
   },
 
   computed: {
@@ -64,7 +67,9 @@ export default {
     threshold() {
       return this.$store.state.parameters.threshold;
     },
-
+    maxForce() {
+      return this.$store.state.parameters.maxForce;
+    }
   },
 
   methods: {

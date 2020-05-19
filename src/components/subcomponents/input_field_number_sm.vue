@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <label>{{label}}</label>
-    <input type="number" v-model="_value" :min="min" :max="max"/>
+    <input type="number" v-model.lazy="_value" :min="min" :max="max"/>
   </div>
 </template>
 
@@ -10,17 +10,29 @@ import { mapActions } from "vuex";
 
 export default {
   props: ["label", "unit", "name", "value", "min", "max"],
+  data: () => ({
+    force: 0
+  }),
   methods: {
     ...mapActions(["action_setValue"])
   },
   computed: {
      _value: {
       get() {
+        this.force;
         return this.value;
       },
       set(_value) {
+        var temp = Number(_value);
+
+        if (temp < this.min || temp > this.max) {
+          this.$notify("Value out of range.");
+          this.force = (this.force + 1) %5;
+ 
+        } else {
         console.log(_value);
-        this.action_setValue({ name: this.name, value: _value });
+        this.action_setValue({ name: this.name, value: Number(_value) });
+        }
       }
     }
   }

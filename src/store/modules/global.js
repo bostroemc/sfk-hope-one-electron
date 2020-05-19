@@ -189,6 +189,7 @@ const actions = {
 
     let _vel = rootState.parameters.velocity;
     let _accel = rootState.parameters.acceleration;
+    let _maxForce = rootState.parameters.maxForce;
     let _cycleTime = 60.0 / rootState.parameters.respirationRate;
 
     let _i = rootState.parameters.inspirationValue;
@@ -218,6 +219,7 @@ const actions = {
     //Step 1: Positioning to fully extended position (bag compressed)
     program.functions[0].parameters[1].value = _vel;
     program.functions[0].parameters[2].value = _accel;
+    program.functions[0].parameters[3].value = _maxForce;
     program.functions[0].parameters[4].value = _startPosition + _stroke;
 
     //Step 2: Delay
@@ -226,6 +228,7 @@ const actions = {
     //Step 3: Postioning to retracted position
     program.functions[2].parameters[1].value = _vel;
     program.functions[2].parameters[2].value = _accel;
+    program.functions[2].parameters[3].value = _maxForce;
     program.functions[2].parameters[4].value = _startPosition;
 
     //Step 3: Delay with output (Ausgang setzen)
