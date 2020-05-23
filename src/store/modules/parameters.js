@@ -19,6 +19,12 @@ const state = {
     compensation: 100,
     maxForce: 50,
 
+    pressure_alarm_hi: 37,
+    pressure_warning_hi: 34,
+    pressure_alarm_lo: 3,
+    pressure_alarm_debounce: 2000,
+    pressure_scaling: 1,
+  
     firstName: "John",
     lastName: "Doe",
     age: 45,

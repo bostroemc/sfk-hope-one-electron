@@ -89,10 +89,9 @@ export default {
       return this.$store.state.global.socket.isConnected;
     },
     monitor() {
-      return this.$store.state.parameters.count <
-        this.$store.state.parameters.threshold
-        ? "banner"
-        : "banner-warning";
+      return  this.$store.getters.IsError  //this.$store.state.parameters.count < this.$store.state.parameters.threshold
+        ? "banner-warning"
+        : "banner";
     }
   },
 
@@ -123,10 +122,15 @@ export default {
 
     reset: function() {
       console.log("reseting...");
+
+      this.$store.commit("SET_PRESSURE_MAXMIN");
+      this.$store.commit("SET_PRESSURE_ALARM", false);
+      this.$store.commit("SET_PRESSURE_WARNING", false);
+
       this.$socket.send(
-        `{ "command": "clearError", "params": [], "handle": ${new Date().getTime()} }`
-      );
-    },
+          `{ "command": "clearError", "params": [], "handle": ${new Date().getTime()} }`
+        );
+      },
 
     activateProgram: function() {
       console.log("id: " + this.$store.state.global.program.id);

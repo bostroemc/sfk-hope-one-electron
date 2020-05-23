@@ -38,28 +38,10 @@ export default {
       return this.$store.state.global.errorID.toString(16).toUpperCase();
     },
     isError() {
-      return this.$store.state.global.errorID != 0;
+      return this.$store.getters.IsError;
     },
     errorMsg() {
-      let error = this.$store.state.global.errorID % 0x100000;
-
-      if (error == 0xe2019) {
-        return "Warning, motor overtemperature shutdown";
-      } else if (error == 0xe2021) {
-        return "Motor temperature outside of measuring range";
-      } else if (error == 0xe2028) {
-        return "Warning, motor temperature monitor defective";
-      } else if (error == 0xf2019) {
-        return "Motor temperature shutdown";
-      } else if (error == 0xf2020) {
-        return "Motor temperature monitor defective";
-      } else if (error == 0xf2028) {
-        return "Excessive deviation";
-      } else if (error == 0xf8027) {
-        return "Emergency stop active";
-      } else {
-        return "See Rexroth documentation for more information.";
-      }
+     return this.$store.getters.ErrorStatus;
     }
   }
 };

@@ -54,7 +54,7 @@ export default {
 
 .sub input {
   text-align: right;
-  width: 60%;
+  width: 50%;
   font-size: 42pt;
   border: none;
   padding-left: 20px;

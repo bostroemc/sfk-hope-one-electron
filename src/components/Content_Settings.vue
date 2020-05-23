@@ -17,6 +17,30 @@
         precision="0"
         :value="respirationRate"
       />
+      <PressureAlarmHigh
+        label="Pressure, high alarm [cm H20]"
+        max="50"
+        min="0"
+        name="pressure_alarm_hi"
+        precision="0"
+        :value="pressureAlarmHigh"
+      />   
+     <PressureAlarmLow
+        label="Pressure, low alarm [cm H20]"
+        max="50"
+        min="0"
+        name="pressure_alarm_lo"
+        precision="0"
+        :value="pressureAlarmLow"
+      />  
+     <PressureWarningHigh
+        label="Pressure, high warning [cm H20]"
+        max="50"
+        min="0"
+        name="pressure_warning_hi"
+        precision="0"
+        :value="pressureWarningHigh"
+      />    
     </div>
     <div>
       <InspirationFactor
@@ -35,6 +59,20 @@
         precision="0"
         :value="expiration"
       />
+      <PressureDebounce
+          label="Pressure alarm delay [ms]"
+          max="10000"
+          min="5"
+          name="pressure_alarm_debounce"
+          precision="0"
+          :value="pressureDebounce"
+        />   
+        <PressureScaling
+          label="Pressure signal scale factor (temp.)"
+          name="pressure_scaling"
+          :value="pressureScaling"
+        />   
+
     </div>
     <div>
       <BagType
@@ -58,6 +96,14 @@ import InspirationFactor from "@/components/subcomponents/input_spinner.vue";
 import ExpirationFactor from "@/components/subcomponents/input_spinner.vue";
 import BagType from "@/components/subcomponents/dropdown_selector.vue";
 
+import PressureAlarmHigh from "@/components/subcomponents/input_spinner.vue";
+import PressureAlarmLow from "@/components/subcomponents/input_spinner.vue";
+import PressureWarningHigh from "@/components/subcomponents/input_spinner.vue";
+import PressureDebounce from "@/components/subcomponents/input_spinner.vue";
+
+//temp
+import PressureScaling from "@/components/subcomponents/input_field_number_sm.vue";
+
 import { mapActions } from "vuex";
 
 export default {
@@ -66,7 +112,12 @@ export default {
     RespirationRate,
     InspirationFactor,
     ExpirationFactor,
-    BagType
+    BagType,
+    PressureAlarmHigh,
+    PressureAlarmLow,
+    PressureWarningHigh,
+    PressureDebounce,
+    PressureScaling
   },
   computed: {
     compression() {
@@ -83,6 +134,23 @@ export default {
     },
     bagType() {
       return this.$store.state.parameters.bagType;
+    },
+    pressureAlarmHigh() {
+      return this.$store.state.parameters.pressure_alarm_hi;
+    },
+    pressureAlarmLow() {
+      return this.$store.state.parameters.pressure_alarm_lo;
+    },    
+    pressureWarningHigh() {
+      return this.$store.state.parameters.pressure_warning_hi;
+    },
+    pressureDebounce() {
+      return this.$store.state.parameters.pressure_alarm_debounce;
+    },
+
+    //temp
+    pressureScaling(){
+      return this.$store.state.parameters.pressure_scaling;
     }
   },
 

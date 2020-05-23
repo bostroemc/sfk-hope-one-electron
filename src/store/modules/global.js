@@ -21,6 +21,15 @@ const state = {
   respirationRateActual: 0,
   stopPending: false,
 
+  pressure: {
+    value: 0,
+    maximum: 0,
+    minimum: 0,
+    warning: false,
+    alarm: false,
+    scaling: 1  //temporary value
+  },
+
   program: {
     name: "undefined",        //human readable name
     id: "default",        //encoded name (ref. drive.ProgActiveName)
@@ -51,6 +60,16 @@ const mutations = {
       }
       if (Object.prototype.hasOwnProperty.call(obj.subscription, "velocity")) {
         state.velocity = obj.subscription.velocity;
+      }
+      if (Object.prototype.hasOwnProperty.call(obj.subscription, "force")) {
+        state.pressure.value = state.pressure.scaling * obj.subscription.force;
+
+        if (state.pressure.value > state.pressure.maximum) {
+          state.pressure.maximum = state.pressure.value;
+        }
+        if (state.pressure.value < state.pressure.minimum) {
+          state.pressure.minimum = state.pressure.value;
+        }
       }
     }
     if (Object.prototype.hasOwnProperty.call(obj, "state")) {
@@ -108,7 +127,23 @@ const mutations = {
   },
   SET_STOP_PENDING(state, value) {
     state.stopPending = value
-  } 
+  },
+  SET_PRESSURE_MAXMIN(state) {
+    state.pressure.maximum = state.pressure.value;
+    state.pressure.minimum = state.pressure.value;
+  },
+  SET_PRESSURE_ALARM(state, value) {
+    state.pressure.alarm = value;
+  },
+  SET_PRESSURE_WARNING(state, value) {
+    state.pressure.warning = value;
+  },
+  
+  //temp
+  SET_PRESSURE_SCALING(state, value) {
+    state.pressure.scaling = value;
+    console.log("scaling: " + state.pressure.scaling);
+  }     
 };
 
 const actions = {
@@ -238,11 +273,26 @@ const actions = {
 
     await axios.put('https://' + ipAddress + '/api/programs/' + program.id, JSON.stringify(program), { headers: headers });
   },
+
   resetRespirationRate({ commit }) {
     setTimeout(()=> {
       commit('SET_RESPIRATION_RATE');
    }, 5000);
-  }
+  },
+
+  setPressureAlarm({ commit }, value) {
+    commit('SET_PRESSURE_ALARM', value);
+  },
+
+  setPressureWarning({ commit }, value) {
+    commit('SET_PRESSURE_WARNING', value);
+  },  
+
+  //temporary
+  setPressureScaling({ commit, rootState }) {
+  commit('SET_PRESSURE_SCALING', rootState.parameters.pressure_scaling);
+  }  
+  
 };
 
 const getters = {
@@ -272,10 +322,71 @@ const getters = {
     }
 
     return processStatus;
+  },
+
+  ErrorStatus(state, getters, rootState) {
+    var errorStatus = "OK";
+
+    let error = state.errorID % 0x100000;
+
+    if (error == 0xe2019) {
+      errorStatus = "Warning, motor overtemperature shutdown";
+
+    } else if (error == 0xe2021) {
+      errorStatus =  "Motor temperature outside of measuring range";
+
+    } else if (error == 0xe2028) {
+      errorStatus =  "Warning, motor temperature monitor defective";
+
+    } else if (error == 0xf2019) {
+      errorStatus =  "Motor temperature shutdown";
+
+    } else if (error == 0xf2020) {
+      errorStatus =  "Motor temperature monitor defective";
+
+    } else if (error == 0xf2028) {
+      errorStatus =  "Excessive deviation";
+
+    } else if (error == 0xf4034) {
+      errorStatus =  "Loss of power";  
+
+    } else if (error == 0xf8027) {
+      errorStatus =  "Emergency stop active";
+
+    } else if (error != 0x0000){
+      errorStatus =  "See Rexroth documentation for more information.";
+  
+    } else if (state.pressure.alarm){
+      errorStatus =  "Alarm: Pressure out of range";
+
+    } else if (state.pressure.warning){
+      errorStatus =  "Warning: Pressure nearing range limit";
+
+    } else if (rootState.parameters.count >= rootState.parameters.threshold){
+      errorStatus =  "Warning: cycle count threshold reached";
+    }
+
+    return errorStatus;
+  },
+
+  IsError(state, getters, rootState) {  //Summation of error condtions; used to trigger the red bar in the top banner
+    var isError = false;
+
+    if (state.errorID != 0x0000) {
+      isError = true;
+
+    } else if (state.pressure.alarm){
+      isError =  true;
+
+    } else if (state.pressure.warning){
+      isError =  true;
+
+    } else if (rootState.parameters.count >= rootState.parameters.threshold){
+      isError =  true;
+    }
+
+    return isError;
   }
-
-
-
 };
 
 

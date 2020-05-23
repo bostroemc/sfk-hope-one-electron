@@ -31,7 +31,8 @@ new Vue({
   router,
   store,
   beforeCreate() {
-		this.$store.commit('initialiseStore');
+    this.$store.commit('initialiseStore');
+    this.$store.dispatch('setPressureScaling'); //temp workaround
 	},
 
   render: h => h(App)
