@@ -15,7 +15,7 @@ const state = {
     bagType: 0,
     startPositionOffset: 0,
     startPosition: 40,
-    endPosition: 135,
+    endPosition: 145,
     compensation: 100,
     maxForce: 50,
 
