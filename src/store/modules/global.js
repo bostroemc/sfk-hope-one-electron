@@ -266,8 +266,8 @@ const actions = {
     program.functions[2].parameters[3].value = _maxForce;
     program.functions[2].parameters[4].value = _startPosition;
 
-    //Step 3: Delay with output (Ausgang setzen)
-    program.functions[3].parameters[2].value = _delay_2;
+    //Step 3: Delay
+    program.functions[3].parameters[1].value = _delay_2;
 
     await axios.put('https://' + ipAddress + '/api/programs?keepLastModifiedDate=false', JSON.stringify(program), { headers: headers });
 

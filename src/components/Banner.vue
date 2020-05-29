@@ -6,7 +6,7 @@
         alt="rexroth"
         style="width:150px;height:auto; margin: 0 40px 0 10px"
       />
-      <h3>HOPE ONE</h3>
+      <h3></h3>
       <button class="btn-comm" :disabled="!communicationStatus">
         <font-awesome-icon icon="network-wired" />
       </button>
