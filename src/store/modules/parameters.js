@@ -6,7 +6,7 @@ const state = {
     count: 0,
     threshold: 10000,
 
-    velocity: 50,
+    velocity: 150,
     acceleration: 500,
     inspirationValue: 1,
     expirationValue: 2,
@@ -103,9 +103,29 @@ const actions = {
 
 };
 
+const getters = {
+    TidalVolume(state) {
+
+        let x = state.compressionFactor;
+        
+
+        switch (state.bagType) {
+            case 0:   // Ambu Spur II Adult
+                return Math.max(0, 0.0714*x**2 + 4.0859*x - 26.933);  //tidal volumn calculation determined empirically.  See report Greg Filek "HMI modifications ased on new BVM holder" 6/12/2020; values updated 6/19/2020
+    
+            case 1:    // Laerdal Bag II Adult
+                return Math.max(0, 0.0704*x**2 + 5.319*x - 35.406);
+    
+            default:
+                return 0.0;  
+        }        
+
+    }
+};
+
 export default {
     state,
     mutations,
-    actions
+    actions,
+    getters
 }
-

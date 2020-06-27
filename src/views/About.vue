@@ -6,7 +6,7 @@
       style="margin-top: 60px; width: 250px; height: auto;"
     />
     <div class="info-box">
-      <h3>HOPE ONE interface for Rexroth Smart Function Kit</h3>
+      <h3>BR BVM Assist interface for Rexroth Smart Function Kit</h3>
       <h4>Version: {{version}}</h4>
       <h4>Copyright &copy; 2020 Bosch Rexroth AG</h4>
       <h4>Bosch Rexroth AG</h4>

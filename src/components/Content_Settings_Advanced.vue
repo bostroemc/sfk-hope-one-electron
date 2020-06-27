@@ -12,7 +12,7 @@
     </div>
 
     <div>
-      <CycleCompensation label="Cycle compensation [ms]" name="compensation"  min="0" :value="compensation"/>
+      <CycleCompensation label="Cycle compensation [ms]" name="compensation"  min="0" max="150" :value="compensation"/>
       <CounterThreshold label="Counter threshold [#]" name="threshold"  min="0" :value="threshold"/>
       <MaxForce label="Max. force [N]" name="maxForce" min="10" max="1000" :value="maxForce"/>
     </div>

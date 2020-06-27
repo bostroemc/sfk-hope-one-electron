@@ -11,7 +11,7 @@
       />
       <RespirationRate
         label="Respiration rate [1/min]"
-        max="25"
+        max="35"
         min="5"
         name="respirationRate"
         precision="0"
@@ -78,7 +78,7 @@
       <BagType
         label="Bag type"
         name="bagType"
-        :fields="['Ambu Spur II Adult', 'Laerdal Bag II Adult', 'Vyaire Adult']"
+        :fields="['Ambu Spur II Adult', 'Laerdal Bag II Adult']"
         :value="bagType"
       />
     </div>

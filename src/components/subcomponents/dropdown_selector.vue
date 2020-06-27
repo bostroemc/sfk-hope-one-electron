@@ -4,7 +4,6 @@
     <select v-model="_value">
       <option value="0">{{fields[0]}}</option>
       <option value="1">{{fields[1]}}</option>
-      <option value="2">{{fields[2]}}</option>
     </select>
     
   </div>

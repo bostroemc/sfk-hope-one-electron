@@ -81,7 +81,7 @@ export default {
       return this.$store.state.parameters.compressionFactor;
     },
     tidalVolume() {
-      return this.$store.state.parameters.compressionFactor * 2.8;
+      return this.$store.getters.TidalVolume;
     },
     respirationRate() {
       return this.$store.state.global.respirationRateActual;

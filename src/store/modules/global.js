@@ -222,52 +222,50 @@ const actions = {
 
     let program = response.data;
 
-    let _vel = rootState.parameters.velocity;
-    let _accel = rootState.parameters.acceleration;
+    let _vel = 1.0 * rootState.parameters.velocity;
+    let _accel = 1.0 * rootState.parameters.acceleration;
     let _maxForce = rootState.parameters.maxForce;
     let _cycleTime = 60.0 / rootState.parameters.respirationRate;
 
     let _i = rootState.parameters.inspirationValue;
     let _e = rootState.parameters.expirationValue;
 
+    let _time_i = _cycleTime * _i / (_i + _e);
+    let _time_e = _cycleTime * _e / (_i + _e);
+
     let _startPosition = Number(rootState.parameters.startPosition) + Number(rootState.parameters.startPositionOffset);
 
     let _maxStroke = rootState.parameters.endPosition - _startPosition;
     let _stroke = _maxStroke * (rootState.parameters.compressionFactor / 100.0);
 
-    let _moveTime = -1;
-    if (_stroke < _vel * _vel / _accel) {
-      _moveTime = 2.0 * Math.sqrt(_stroke / _accel);
-    } else {
-      _moveTime = _stroke / _vel + _vel / _accel;
-    }
+    let _delay = 0.25; //inspiration delay fixed at 250 ms
+    let _moveTime_i = _time_i - _delay ;
+    let _moveTime_e = _i < _e ? _moveTime_i : _time_e - _delay;
 
-    let _delayTotal = _cycleTime - 2.0 * _moveTime;
+    let _v_i = moveTime(_stroke, _vel, _accel, _moveTime_i);
+    let _v_e = moveTime(_stroke, _vel, _accel, _moveTime_e);
 
-    let _delay_1 = Math.round(1000.0 * _delayTotal * _i / (_i + _e));
-    let _delay_2 = Math.round(1000.0 * _delayTotal * _e / (_i + _e) - rootState.parameters.compensation);
-
-    if (_delay_1 < 0 || _delay_2 < 0) {
+    if (_v_i == 0 || _v_e == 0) {
       return Promise.reject("Inconsistent parameterization.");
     }
 
     //Step 1: Positioning to fully extended position (bag compressed)
-    program.functions[0].parameters[1].value = _vel;
+    program.functions[0].parameters[1].value = _v_i;
     program.functions[0].parameters[2].value = _accel;
     program.functions[0].parameters[3].value = _maxForce;
     program.functions[0].parameters[4].value = _startPosition + _stroke;
 
     //Step 2: Delay
-    program.functions[1].parameters[0].value = _delay_1;
+    program.functions[1].parameters[0].value = Math.round(1000.0 * (_time_i - _moveTime_i));
 
     //Step 3: Postioning to retracted position
-    program.functions[2].parameters[1].value = _vel;
+    program.functions[2].parameters[1].value = _v_e;
     program.functions[2].parameters[2].value = _accel;
     program.functions[2].parameters[3].value = _maxForce;
     program.functions[2].parameters[4].value = _startPosition;
 
     //Step 3: Delay
-    program.functions[3].parameters[0].value = _delay_2;
+    program.functions[3].parameters[0].value = Math.round(1000.0 * (_time_e - _moveTime_e) - rootState.parameters.compensation);
 
     await axios.put('https://' + ipAddress + '/api/programs?keepLastModifiedDate=false', JSON.stringify(program), { headers: headers });
 
@@ -389,6 +387,29 @@ const getters = {
   }
 };
 
+function moveTime (distance, velocity, acceleration, t) {      // Determine velocity=v required to move load distance in time t using given value of acceleration.  Maximum velocity=velocity, jerk-unbounded
+  let v = 0;
+
+  if (distance<0 || velocity<0 || acceleration<0 || t<=0) {    // Incorrect parameterization
+      return v;
+  }
+ 
+  if (acceleration < 4.0 * distance / (t*t)) {                 // Accelation is too restrictive to move load given distance in time t; return 0
+      return v;
+  }
+
+  let tau_max = Math.min(t - distance/velocity, t/2.0);
+  let tau_min = t/2.0 - Math.sqrt(t*t/4.0 - distance/acceleration);
+
+  if (tau_max < tau_min) {                                    // Invalid input; return 0
+      return v;
+  }
+
+  let tau = tau_min + 0.0 * (tau_max - tau_min);              // Always use shape factor 0;
+  v = acceleration * tau;
+
+  return v;                                                   
+}
 
 export default {
   state,

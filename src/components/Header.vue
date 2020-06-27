@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <IPAddress label="IP address" name="ipAddress" :value="ipAddress" />
-    <BMV label="BMV" name="bagType" :value="bagName" />
+    <BMV label="BVM" name="bagType" :value="bagName" />
     <RespirationRate
       label="Respiration rate"
       name="respirationRate"
@@ -52,9 +52,6 @@ export default {
 
         case 1:
           return "Laerdal Bag II Adult";
-
-        case 2:
-          return "Vyaire Adult";
 
         default:
           return "Unknown";
