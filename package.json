@@ -1,7 +1,7 @@
 {
   "name": "br-bvm-assist",
   "productName": "BR BVM Assist",
-  "version": "0.0.46",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

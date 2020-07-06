@@ -6,7 +6,7 @@
       style="margin-top: 60px; width: 250px; height: auto;"
     />
     <div class="info-box">
-      <h3>BR BVM Assist interface for Rexroth Smart Function Kit</h3>
+      <h3>BVM Assist interface for Rexroth Smart Function Kit</h3>
       <h4>Version: {{version}}</h4>
       <h4>Copyright &copy; 2020 Bosch Rexroth AG</h4>
       <h4>Bosch Rexroth AG</h4>
@@ -14,13 +14,13 @@
 
     <div class="info-box">
       <h4>Open Source Licenses:</h4>
-      <div class="license-box">{{data}}</div>
+      <div class="license-box" style="white-space: pre-line;">{{data}}</div>
     </div>
   </div>
 </template>
 
 <script>
-import licenses from "!!raw-loader!../assets/licenses.txt";
+import licenses from "!!raw-loader!../assets/licenses_production.txt";
 
 export default {
   name: "About",
